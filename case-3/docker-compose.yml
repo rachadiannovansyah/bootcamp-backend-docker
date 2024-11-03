@@ -1,0 +1,39 @@
+services:
+  app:
+    image: ayocodingit/langkah-nyata-service:latest
+    container_name: langkah-nyata-app
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=langkah_nyata
+      - DB_USERNAME=root
+      - DB_PASSWORD=root_password
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:5.7
+    container_name: langkah-nyata-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=langkah_nyata
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
